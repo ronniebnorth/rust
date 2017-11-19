@@ -10,19 +10,13 @@
 
 #![deny(safe_packed_borrows)]
 
-// check that derive on a packed struct with non-Copy fields
-// correctly. This can't be made to work perfectly because
-// we can't just use the field from the struct as it might
-// not be aligned.
-
-#[derive(PartialEq)]
-struct Y(usize);
-
-#[derive(PartialEq)]
+// check that deriving a non-Copy packed struct is an error.
+#[derive(Copy, Clone, PartialEq, Eq)]
 #[repr(packed)]
-struct X(Y);
-//~^ ERROR #[derive] can't be used on a non-Copy #[repr(packed)]
-//~| hard error
+pub struct Foo<T>(T, T, T);
 
-fn main() {
-}
+#[derive(PartialEq, Eq)]
+#[repr(packed)]
+pub struct Bar(u32, u32, u32);
+
+fn main() {}
